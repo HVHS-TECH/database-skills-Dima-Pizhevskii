@@ -25,23 +25,35 @@ const HTML_OUTPUT = document.getElementById("databaseOutput");
     }
   )
 }*/
-function goodbye(){
+function goodbye() {
   firebase.database().ref('/').set(
     {
       message: 'Ka kite ano'
     }
   )
 } 
-
-function helloWorld(){
-  console.log("Running read()")
-  firebase.database().ref('/').once('value', DO_THIS)
+function goodbye1() {
   firebase.database().ref('/').set(
     {
-      message: 'Read'
+      cat: '1231232131312'
     }
   )
+} 
+
+function simpleRead() {
+  console.log("Running read()")
+  firebase.database().ref('/').once ('value', display)
+  console.log(1122)
+
 }
-function DO_THIS  (snapshot){
-console.log (snapshot.val());
+
+function display(snapshot) {
+  var dbData = snapshot.val();
+  if (dbData == nul) {
+    console.log("bad")
+  }
+  else{
+    console.log("good"+ dbData)
+  }
 }
+
