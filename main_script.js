@@ -25,35 +25,90 @@ const HTML_OUTPUT = document.getElementById("databaseOutput");
     }
   )
 }*/
-function goodbye() {
-  firebase.database().ref('/').set(
-    {
-      message: 'Ka kite ano'
-    }
-  )
-} 
-function goodbye1() {
-  firebase.database().ref('/').set(
-    {
-      cat: '1231232131312'
-    }
-  )
-} 
 
+function cat(){
+  console.log("cat")
+}
+
+function dog() {
+  firebase.database().ref('/message').set(
+    {
+      dog: 'bark'
+    }
+  )
+}
+function complexWrite() {
+  firebase.database().ref('/').set(
+    {
+    game_score: {
+    players: {
+      BingBong:{
+        low_score: 12
+        high_score: 22
+      },
+      Mr_Anderson: {
+        low_score: 15
+        high_score: 25
+      } ,
+      Toby_ashton: {
+        low_score: 5
+        high_score: 15
+      },
+      T_rex: {
+        low_score: 4
+        high_score: 5
+      },
+    }
+  }
+  }
+  );
+}
 function simpleRead() {
-  console.log("Running read()")
-  firebase.database().ref('/').once ('value', display)
-  console.log(1122)
+  console.log("| Running simpleRead...")
+  firebase.database().ref('/message').once('value', display)
+
 
 }
+function safeRead() {
+  console.log("| Running safeRead...")
+  firebase.database().ref('/message').once('value', displaySafe, fb_readError)
+
+
+}
+function listen() {
+  console.log("| Running safeRead...")
+  firebase.database().ref('/message').on('value', displaySafe, fb_readError)
+}
+
+
+/************************** 
+ displays
+**********************************/
+
+
+
 
 function display(snapshot) {
-  var dbData = snapshot.val();
-  if (dbData == nul) {
-    console.log("bad")
-  }
-  else{
-    console.log("good"+ dbData)
-  }
+  console.log(snapshot.val())
 }
+
+
+function displaySafe(snapshot) {
+  var dbData = snapshot.val();
+
+  if (dbData == null) {
+    console.log("There was no data found")
+  }
+  else {
+    console.log("The message is", dbData, ", no errors")
+  }
+
+}
+
+function fb_readError(error) {
+  console.log("There was an error reading the message")
+  console.error(error)
+}
+
+
 
