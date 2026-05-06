@@ -19,7 +19,7 @@
   <!-- firebase end ******************************************-->
   <script src="fb_setup.js"></script>
   <script src="fb_io.js"></script>
-  <script src="main_script.js"></script>
+
 </head>
 
 <body>
@@ -35,13 +35,17 @@
   <p> Task 1: change the message in fb_helloWorld() to "Kia ora te ao"</p>
   <p> Task 2: create another button that changes the message to "Goodbye/ka kite āno"</p>
 
-  <button onclick="cat()">Cat</button>
-  <button onclick="dog()">Dog</button>
-  <button onclick="simpleRead()">Read</button>
+  <button onclick="cat()">Add Cat</button>
+  <button onclick="dog()">Add Dog</button>
+  <button onclick="simpleRead()">Simple Read</button>
   <button onclick="safeRead()">Safe Read</button>
   <button onclick="listen()">Listen</button>
+  <button onclick="complexWrite()">Write a list</button>
+  <button onclick="addCat()">Add Cat to a List</button>
+  <button onclick="gameScoreRead()">Show Cat's high score</button>
 
 
+  <script src="main_script.js"></script>
   <h2>Output</h2>
   <div id="databaseOutput"></div>
 

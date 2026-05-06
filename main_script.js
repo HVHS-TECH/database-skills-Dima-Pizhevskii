@@ -26,13 +26,21 @@ const HTML_OUTPUT = document.getElementById("databaseOutput");
   )
 }*/
 console.log("running")
-let newPlayer = "Cat"
+
+
+let newPlayer = "cat"
+
 function cat(){
-  console.log("cat");
+  firebase.database().ref('/cat').set(
+        {
+      cat: 'meow'
+    }
+  )
+
 }
 
 function dog() {
-  firebase.database().ref('/message').set(
+  firebase.database().ref('/dog').set(
     {
       dog: 'bark'
     }
@@ -44,49 +52,61 @@ function complexWrite() {
     game_score: {
     players: {
       BingBong:{
-        low_score: 12
-        high_score: 22
+        low_score: 12,
+        high_score: 22,
       },
       Mr_Anderson: {
-        low_score: 15
-        high_score: 25
+        low_score: 15,
+        high_score: 25,
       } ,
       Toby_ashton: {
-        low_score: 5
-        high_score: 15
+        low_score: 5,
+        high_score: 15,
       },
       T_rex: {
-        low_score: 4
-        high_score: 5
+        low_score: 4,
+        high_score: 5,
       },
     }
   }
   }
   );
   
-  firebase.database()ref('/game_score/players/' + newPlayer).set({
-        low_score: 3
-        high_score: 4
+}
+
+function addCat(){
+    firebase.database().ref('/game_score/players/' + newPlayer).set({
+        low_score: 3,
+        high_score: 4,
 }
   
-)}
+)
+}
 function simpleRead() {
   console.log("| Running simpleRead...")
-  firebase.database().ref('/message').once('value', display)
+  firebase.database().ref('/').once('value', display)
 
 
 }
 function safeRead() {
   console.log("| Running safeRead...")
-  firebase.database().ref('/message').once('value', displaySafe, fb_readError)
-
-
+  firebase.database().ref('/').once('value', displaySafe, fb_readError)
 }
+
+
 function listen() {
   console.log("| Running safeRead...")
-  firebase.database().ref('/message').on('value', displaySafe, fb_readError)
+  firebase.database().ref('/').on('value', displaySafe, fb_readError)
 }
 
+function gameScoreRead() {
+  console.log("| Running gameScoreRead...")
+  firebase.database().ref('/game_score/').once('value', fb_gameHighScore, fb_readError)
+}
+/*let names + Object.keys(dbData)
+console.log name
+for(i=0; i<names.length;i++)
+  console.log*/
 
 /************************** 
  displays
@@ -108,6 +128,19 @@ function displaySafe(snapshot) {
   }
   else {
     console.log("The message is", dbData, ", no errors")
+  }
+
+}
+function fb_gameHighScore(snapshot) {
+  let cat = snapshot.val();
+  console.log("debuging..." + cat.players.cat.high_score)
+  if (cat == null) {
+    console.log("There was no data found")
+  }
+  else {
+    console.log("Cat got " + cat.players.cat.high_score +" points")
+    let names = Object.keys(snapshot.val())
+    console.log (names)
   }
 
 }
