@@ -25,9 +25,10 @@ const HTML_OUTPUT = document.getElementById("databaseOutput");
     }
   )
 }*/
-
+console.log("running")
+let newPlayer = "Cat"
 function cat(){
-  console.log("cat")
+  console.log("cat");
 }
 
 function dog() {
@@ -62,7 +63,13 @@ function complexWrite() {
   }
   }
   );
+  
+  firebase.database()ref('/game_score/players/' + newPlayer).set({
+        low_score: 3
+        high_score: 4
 }
+  
+)}
 function simpleRead() {
   console.log("| Running simpleRead...")
   firebase.database().ref('/message').once('value', display)
