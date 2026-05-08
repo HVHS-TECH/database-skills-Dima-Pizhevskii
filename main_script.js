@@ -139,8 +139,13 @@ function fb_gameHighScore(snapshot) {
   }
   else {
     console.log("Cat got " + cat.players.cat.high_score +" points")
-    let names = Object.keys(snapshot.val())
+    let names = Object.keys(snapshot.val().players)
+    
     console.log (names)
+    for (let i = 0; i < names.length; i++) {
+      let key = names[i];
+      console.log(key + cat.players)
+    }
   }
 
 }
