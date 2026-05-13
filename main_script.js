@@ -25,9 +25,9 @@ const HTML_OUTPUT = document.getElementById("databaseOutput");
     }
   )
 }*/
-console.log("running")
+console.log("script running")
 
-
+/*adding new player*/
 let newPlayer = "cat"
 
 function cat(){
@@ -36,7 +36,7 @@ function cat(){
       cat: 'meow'
     }
   )
-
+console.log ("Cat Added")
 }
 
 function dog() {
@@ -45,7 +45,9 @@ function dog() {
       dog: 'bark'
     }
   )
+  console.log ("Dog Added")
 }
+
 function complexWrite() {
   firebase.database().ref('/').set(
     {
@@ -73,6 +75,12 @@ function complexWrite() {
   );
   
 }
+function clearEverything(){
+
+  var gameScore = "game_score"
+    firebase.database().ref('/').remove()
+      console.log("cleared")
+}
 
 function addCat(){
     firebase.database().ref('/game_score/players/' + newPlayer).set({
@@ -82,6 +90,11 @@ function addCat(){
   
 )
 }
+
+function removeCat(){
+    firebase.database().ref('/game_score/players/' + newPlayer).remove()
+}
+
 function simpleRead() {
   console.log("| Running simpleRead...")
   firebase.database().ref('/').once('value', display)
@@ -99,9 +112,19 @@ function listen() {
   firebase.database().ref('/').on('value', displaySafe, fb_readError)
 }
 
+
+function trexScore() {
+  console.log("| Running gameScoreRead...")
+  firebase.database().ref('/game_score/players/T_rex/high_score').once('value', trex_display, fb_readError)
+}
+
 function gameScoreRead() {
   console.log("| Running gameScoreRead...")
-  firebase.database().ref('/game_score/').once('value', fb_gameHighScore, fb_readError)
+  firebase.database().ref('/game_score/players').once('value', fb_gameHighScore, fb_readError)
+}
+function for_each_gameScoreRead() {
+  console.log("| Running gameScoreRead...")
+  firebase.database().ref('/game_score/players').once('value', fb_forEach_gameHighScore, fb_readError)
 }
 /*let names + Object.keys(dbData)
 console.log name
@@ -131,23 +154,36 @@ function displaySafe(snapshot) {
   }
 
 }
+function trex_display (snapshot){
+  let dbData = snapshot.val()
+  console.log ("T_rex got " + dbData + ' points for their high score!')
+}
 function fb_gameHighScore(snapshot) {
-  let cat = snapshot.val();
-  console.log("debuging..." + cat.players.cat.high_score)
-  if (cat == null) {
+  let dbData = snapshot.val();
+  console.log("| debugging" )
+  if (dbData == null) {
     console.log("There was no data found")
   }
   else {
-    console.log("Cat got " + cat.players.cat.high_score +" points")
-    let names = Object.keys(snapshot.val().players)
-    
-    console.log (names)
+    let names = Object.keys(dbData)
+
     for (let i = 0; i < names.length; i++) {
       let key = names[i];
-      console.log(key + cat.players)
+      console.log("Player number " + i +" is "+key+". They're high score is "+dbData[key]["high_score"] + " point")
     }
   }
 
+}
+
+function fb_forEach_gameHighScore(snapshot) {
+
+ 
+snapshot.forEach(fb_showOneScore)
+  
+
+}
+function fb_showOneScore (child){
+  console.log(child.val());
 }
 
 function fb_readError(error) {
