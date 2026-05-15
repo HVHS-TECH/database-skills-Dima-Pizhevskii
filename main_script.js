@@ -26,7 +26,8 @@ const HTML_OUTPUT = document.getElementById("databaseOutput");
   )
 }*/
 console.log("script running")
-
+var GLOBAL_user;
+var authenticationListener
 /*adding new player*/
 let newPlayer = "cat"
 
@@ -69,6 +70,10 @@ function complexWrite() {
         low_score: 4,
         high_score: 5,
       },
+      zzz_rex: {
+        low_score: 4,
+        high_score: 5,
+      },
     }
   }
   }
@@ -108,13 +113,13 @@ function safeRead() {
 
 
 function listen() {
-  console.log("| Running safeRead...")
+  console.log("| Running listen...")
   firebase.database().ref('/').on('value', displaySafe, fb_readError)
 }
 
 
 function trexScore() {
-  console.log("| Running gameScoreRead...")
+
   firebase.database().ref('/game_score/players/T_rex/high_score').once('value', trex_display, fb_readError)
 }
 
@@ -122,9 +127,41 @@ function gameScoreRead() {
   console.log("| Running gameScoreRead...")
   firebase.database().ref('/game_score/players').once('value', fb_gameHighScore, fb_readError)
 }
-function for_each_gameScoreRead() {
-  console.log("| Running gameScoreRead...")
-  firebase.database().ref('/game_score/players').once('value', fb_forEach_gameHighScore, fb_readError)
+function sortValue_gameScoreRead() {
+  
+  firebase.database().ref('/game_score/players').orderByChild('high_score').once('value', fb_forEach_gameHighScore, fb_readError)
+}
+
+function sortName_gameScoreRead() {
+  
+  firebase.database().ref('/game_score/players').orderByKey().once('value', fb_forEach_gameHighScore, fb_readError)
+}
+
+function fb_login() {
+  authenticationListener = firebase.auth().onAuthStateChanged(fb_handleLogin);
+}
+function fb_handleLogin(_user){
+  if (_user) {
+    console.log("User is logged in")
+    GLOBAL_user + _user;
+  } else {
+    console.log("User is NOT logged in, starting popup process")
+    fb_popupLogin();
+  }
+}
+function fb_popupLogin(){
+  var provider = new firebase.auth.GoogleAuthProvider();
+
+  firebase.auth().signInWithPopup(provider).then((result) => {
+    GLOBAL_user = result.user;
+    console.log("User has logged in")
+  })
+}
+
+function fb_logout() {
+  authenticationListener();
+  firebase.auth().signOut();
+  console.log("loggedout")
 }
 /*let names + Object.keys(dbData)
 console.log name
@@ -176,14 +213,16 @@ function fb_gameHighScore(snapshot) {
 }
 
 function fb_forEach_gameHighScore(snapshot) {
-
+console.log ("|Running forEach")
  
 snapshot.forEach(fb_showOneScore)
-  
+
 
 }
 function fb_showOneScore (child){
-  console.log(child.val());
+
+  console.log("high score for " +  child.key + " is " + child.val().low_score);
+
 }
 
 function fb_readError(error) {
